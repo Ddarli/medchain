@@ -5,10 +5,10 @@ import { AccessLogs } from './components/AccessLogs';
 import { ProfileSetup } from './components/ProfileSetup';
 import { User, MedicalRecord } from './types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, User as UserIcon, FileText, LogOut, History } from 'lucide-react';
+import { Sun, Moon, User as UserIcon, FileText, LogOut, History, Calendar } from 'lucide-react';
 import {DocumentSetup} from "./components/DocumentSetup.tsx";
+import { Appointments } from './components/Appointments';
 
-// Translations
 const translations = {
   en: {
     appName: 'MedPortal',
@@ -28,6 +28,7 @@ const translations = {
     downloadRecord: 'Download Record',
     viewFullRecord: 'View Full Record',
     medicalRecords: 'Medical Records',
+    appointments: 'Appointments',
     status: {
       completed: 'Completed',
       pending: 'Pending'
@@ -51,6 +52,7 @@ const translations = {
     downloadRecord: 'Скачать запись',
     viewFullRecord: 'Просмотреть полную запись',
     medicalRecords: 'Медицинские записи',
+    appointments: 'Записи',
     status: {
       completed: 'Завершено',
       pending: 'В обработке'
@@ -100,7 +102,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
-  const [activeTab, setActiveTab] = useState<'profile' | 'records' | 'access-logs'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'records' | 'access-logs' | 'appointments'>('profile');
   const [language, setLanguage] = useState<'en' | 'ru'>('en');
   const [needsProfileSetup, setNeedsProfileSetup] = useState(false);
   const [needsDocumentSetup, setNeedsDocumentSetup] = useState(false);
@@ -263,6 +265,23 @@ function App() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveTab('appointments')}
+                  className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
+                    activeTab === 'appointments'
+                      ? isDarkMode
+                        ? 'bg-gray-700 text-white'
+                        : 'bg-blue-100 text-blue-700'
+                      : isDarkMode
+                      ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  {t.appointments}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveTab('access-logs')}
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
                     activeTab === 'access-logs'
@@ -339,6 +358,8 @@ function App() {
                     <div className="text-center text-gray-500">Loading...</div>
                 ) : activeTab === 'access-logs' ? (
                     <AccessLogs isDarkMode={isDarkMode} language={language} />
+                ) : activeTab === 'appointments' ? (
+                    <Appointments isDarkMode={isDarkMode} language={language} />
                 ) : (
                     <Dashboard
                         user={user}
