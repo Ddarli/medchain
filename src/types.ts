@@ -71,3 +71,22 @@ export interface Translations {
     pending: string;
   };
 }
+
+export interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  rating: number;
+  image: string;
+  availableSlots: string[];
+}
+
+export interface Appointment {
+  id: string;
+  doctorId: string;
+  doctorName: string;
+  specialty: string;
+  date: string;
+  time: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+}
