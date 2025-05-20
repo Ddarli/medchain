@@ -22,6 +22,7 @@ export interface MedicalRecord {
   Description: string;
   status: 'pending' | 'completed';
   result?: string;
+  isPrivate?: boolean;
 }
 
 export interface AccessLog {
@@ -66,6 +67,8 @@ export interface Translations {
   downloadRecord: string;
   viewFullRecord: string;
   medicalRecords: string;
+  makePrivate: string;
+  makePublic: string;
   status: {
     completed: string;
     pending: string;
