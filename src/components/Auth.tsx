@@ -133,38 +133,37 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-md"
+      className="w-full max-w-md mx-auto"
     >
-      <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-8`}>
-        <h2 className={`text-2xl font-bold text-center mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      <div className="glass-panel rounded-2xl p-8">
+        <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
           {isLogin ? t.login : t.register}
         </h2>
+        
         {error && (
-          <div className="mb-4 p-3 bg-red-900/20 border border-red-800 rounded text-red-400 text-sm flex items-start">
+          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-start">
             <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label className="block text-sm font-medium text-dark-700 dark:text-dark-200 mb-2">
               {t.email}
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`mt-1 block w-full rounded-md shadow-sm
-                ${isDarkMode 
-                  ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500' 
-                  : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'}`}
+              className="glass-input w-full"
               required
             />
           </div>
 
           {!isLogin && (
             <div>
-              <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-200 mb-2">
                 {t.phone}
               </label>
               <input
@@ -172,17 +171,14 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 234 567 8900"
-                className={`mt-1 block w-full rounded-md shadow-sm
-                  ${isDarkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500' 
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'}`}
+                className="glass-input w-full"
                 required={!isLogin}
               />
             </div>
           )}
 
           <div>
-            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            <label className="block text-sm font-medium text-dark-700 dark:text-dark-200 mb-2">
               {t.password}
             </label>
             <div className="relative">
@@ -190,23 +186,19 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`mt-1 block w-full rounded-md shadow-sm pr-10
-                  ${isDarkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500' 
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'}`}
+                className="glass-input w-full pr-10"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full
-                  ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-dark-400 hover:text-dark-600 dark:text-dark-400 dark:hover:text-dark-200"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             {!isLogin && (
-              <p className={`mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="mt-2 text-xs text-dark-500 dark:text-dark-400">
                 {t.passwordRequirements}
               </p>
             )}
@@ -214,7 +206,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
 
           {!isLogin && (
             <div>
-              <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-200 mb-2">
                 {t.confirmPassword}
               </label>
               <div className="relative">
@@ -222,17 +214,13 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`mt-1 block w-full rounded-md shadow-sm pr-10
-                    ${isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'}`}
+                  className="glass-input w-full pr-10"
                   required={!isLogin}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full
-                    ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-dark-400 hover:text-dark-600 dark:text-dark-400 dark:hover:text-dark-200"
                 >
                   {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -244,10 +232,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             disabled={loading}
-            className={`w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white 
-              ${loading 
-                ? 'bg-blue-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'}`}
+            className="glass-button w-full flex items-center justify-center py-3"
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -264,7 +249,8 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
             )}
           </motion.button>
         </form>
-        <p className={`mt-4 text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+
+        <p className="mt-6 text-center text-sm text-dark-600 dark:text-dark-400">
           {isLogin ? t.noAccount : t.haveAccount}
           <button
             onClick={() => {
@@ -274,7 +260,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
               setConfirmPassword('');
               setPhone('');
             }}
-            className={`${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'} ml-1`}
+            className="ml-1 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
           >
             {isLogin ? t.register : t.login}
           </button>

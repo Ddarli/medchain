@@ -22,7 +22,7 @@ export interface MedicalRecord {
   Description: string;
   status: 'pending' | 'completed';
   result?: string;
-  isPrivate?: boolean;
+  isPrivate: boolean;
 }
 
 export interface AccessLog {

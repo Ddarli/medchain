@@ -3,39 +3,43 @@
 @tailwind utilities;
 
 @layer base {
-  .glass-effect {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+  body {
+    @apply bg-gradient-to-br from-primary-50 to-primary-100 dark:from-dark-900 dark:to-dark-950 min-h-screen;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/70 dark:bg-dark-800/50 backdrop-blur-lg border border-white/20 dark:border-dark-700/50 shadow-xl;
   }
   
-  .dark .glass-effect {
-    @apply bg-dark-800/50 border-dark-700/50;
+  .glass-input {
+    @apply bg-white/10 dark:bg-dark-800/30 backdrop-blur-sm border border-white/20 dark:border-dark-700/30 
+           rounded-lg px-4 py-2 text-dark-900 dark:text-white placeholder-dark-400 dark:placeholder-dark-500
+           focus:outline-none focus:ring-2 focus:ring-primary-500/50 dark:focus:ring-primary-400/50 transition-all duration-200;
   }
-}
 
-.glass-card {
-  @apply rounded-xl shadow-xl glass-effect;
-}
+  .glass-button {
+    @apply bg-primary-500/90 hover:bg-primary-600/90 dark:bg-primary-600/90 dark:hover:bg-primary-700/90
+           backdrop-blur-sm text-white rounded-lg px-4 py-2 font-medium
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
 
-.glass-input {
-  @apply bg-white/5 border border-white/10 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all duration-200;
-}
+  .glass-button-secondary {
+    @apply bg-dark-200/50 hover:bg-dark-300/50 dark:bg-dark-700/50 dark:hover:bg-dark-600/50
+           backdrop-blur-sm text-dark-900 dark:text-white rounded-lg px-4 py-2 font-medium
+           transition-all duration-200;
+  }
 
-.dark .glass-input {
-  @apply bg-dark-800/30 border-dark-700/30 text-white placeholder-dark-400;
-}
+  .nav-link {
+    @apply flex items-center w-full px-4 py-3 rounded-lg text-left transition-all duration-200;
+  }
 
-.btn-primary {
-  @apply bg-primary-500 hover:bg-primary-600 text-white rounded-lg px-4 py-2 transition-all duration-200;
-}
+  .nav-link-active {
+    @apply bg-primary-100/50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300;
+  }
 
-.dark .btn-primary {
-  @apply bg-primary-600 hover:bg-primary-700;
-}
-
-.btn-secondary {
-  @apply bg-dark-200 hover:bg-dark-300 text-dark-900 rounded-lg px-4 py-2 transition-all duration-200;
-}
-
-.dark .btn-secondary {
-  @apply bg-dark-700 hover:bg-dark-600 text-white;
+  .nav-link-inactive {
+    @apply text-dark-600 dark:text-dark-300 hover:bg-dark-100/50 dark:hover:bg-dark-700/50;
+  }
 }
