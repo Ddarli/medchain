@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UserPlus, LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, LogIn, Loader2, AlertCircle, Eye, EyeOff, Stethoscope } from 'lucide-react';
 
 interface AuthProps {
-  onLogin: (value: boolean, isNewUser?: boolean) => void;
+  onLogin: (value: boolean, isNewUser?: boolean, needDocuments?: boolean, isDoctor?: boolean) => void;
   isDarkMode: boolean;
   language: 'en' | 'ru';
 }
@@ -23,7 +23,11 @@ const translations = {
     invalidEmail: 'Please enter a valid email address',
     invalidPhone: 'Please enter a valid phone number (e.g., +1 234 567 8900)',
     invalidPassword: 'Password must be at least 8 characters long and include a number and special character',
-    passwordMismatch: 'Passwords do not match'
+    passwordMismatch: 'Passwords do not match',
+    doctorLogin: 'Doctor Login',
+    patientLogin: 'Patient Login',
+    testCredentials: 'Test Credentials',
+    useTestCredentials: 'Use test credentials'
   },
   ru: {
     login: 'Войти',
@@ -39,7 +43,23 @@ const translations = {
     invalidEmail: 'Пожалуйста, введите корректный адрес эл. почты',
     invalidPhone: 'Пожалуйста, введите корректный номер телефона (например, +1 234 567 8900)',
     invalidPassword: 'Пароль должен содержать минимум 8 символов, цифру и специальный символ',
-    passwordMismatch: 'Пароли не совпадают'
+    passwordMismatch: 'Пароли не совпадают',
+    doctorLogin: 'Вход для врачей',
+    patientLogin: 'Вход для пациентов',
+    testCredentials: 'Тестовые данные',
+    useTestCredentials: 'Использовать тестовые данные'
+  }
+};
+
+// Test credentials
+const testCredentials = {
+  patient: {
+    email: 'test@example.com',
+    password: 'Test123!@#'
+  },
+  doctor: {
+    email: 'doctor@example.com',
+    password: 'Doctor123!@#'
   }
 };
 
@@ -53,6 +73,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(false);
 
   const t = translations[language];
 
@@ -69,6 +90,12 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
   const isPasswordValid = (password: string) => {
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
+  };
+
+  const useTestCredentials = () => {
+    const credentials = isDoctor ? testCredentials.doctor : testCredentials.patient;
+    setEmail(credentials.email);
+    setPassword(credentials.password);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,6 +127,17 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
     setLoading(true);
 
     try {
+      // Simulate API call with test credentials
+      if (
+        (isDoctor && email === testCredentials.doctor.email && password === testCredentials.doctor.password) ||
+        (!isDoctor && email === testCredentials.patient.email && password === testCredentials.patient.password)
+      ) {
+        localStorage.setItem("token", "mock-token");
+        localStorage.setItem("userType", isDoctor ? "doctor" : "patient");
+        onLogin(true, false, false, isDoctor);
+        return;
+      }
+
       const response = await fetch(isLogin ? 'http://localhost:8080/auth/authenticate' : 'http://localhost:8080/auth/register', {
         method: 'POST',
         headers: {
@@ -109,6 +147,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
           email,
           password,
           ...(isLogin ? {} : { phone }),
+          role: isDoctor ? 'doctor' : 'patient'
         }),
       });
 
@@ -120,8 +159,9 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
 
       document.cookie = `user_id=${data.UserID}; path=/; max-age=2592000`;
       localStorage.setItem("token", data.Token);
+      localStorage.setItem("userType", isDoctor ? "doctor" : "patient");
 
-      onLogin(true, !data.Verified, data.NeedDocsSetup);
+      onLogin(true, !data.Verified, data.NeedDocsSetup, isDoctor);
     } catch (err: any) {
       setError(err.message || t.invalidCredentials);
     } finally {
@@ -136,6 +176,35 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
       className="w-full max-w-md mx-auto"
     >
       <div className="glass-panel rounded-2xl p-8">
+        <div className="flex justify-center space-x-4 mb-6">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsDoctor(false)}
+            className={`flex items-center px-4 py-2 rounded-lg ${
+              !isDoctor
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
+          >
+            <UserPlus className="w-5 h-5 mr-2" />
+            {t.patientLogin}
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsDoctor(true)}
+            className={`flex items-center px-4 py-2 rounded-lg ${
+              isDoctor
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
+          >
+            <Stethoscope className="w-5 h-5 mr-2" />
+            {t.doctorLogin}
+          </motion.button>
+        </div>
+
         <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
           {isLogin ? t.login : t.register}
         </h2>
@@ -248,6 +317,18 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
               </>
             )}
           </motion.button>
+
+          {isLogin && (
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={useTestCredentials}
+              className="glass-button-secondary w-full flex items-center justify-center py-3 mt-4"
+            >
+              {t.useTestCredentials}
+            </motion.button>
+          )}
         </form>
 
         <p className="mt-6 text-center text-sm text-dark-600 dark:text-dark-400">
