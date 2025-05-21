@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
+import { DoctorDashboard } from './components/DoctorDashboard';
 import { AccessLogs } from './components/AccessLogs';
 import { ProfileSetup } from './components/ProfileSetup';
 import { User, MedicalRecord } from './types';
@@ -15,7 +16,8 @@ import {
   Calendar,
   Menu,
   X as CloseIcon,
-  Globe
+  Globe,
+  Users
 } from 'lucide-react';
 import { DocumentSetup } from "./components/DocumentSetup";
 import { Appointments } from './components/Appointments';
@@ -105,21 +107,23 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
-  const [activeTab, setActiveTab] = useState<'profile' | 'records' | 'access-logs' | 'appointments'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'records' | 'access-logs' | 'appointments' | 'patients'>('profile');
   const [language, setLanguage] = useState<'en' | 'ru'>('en');
   const [needsProfileSetup, setNeedsProfileSetup] = useState(false);
   const [needsDocumentSetup, setNeedsDocumentSetup] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDoctor, setIsDoctor] = useState(false);
 
   const t = translations[language];
 
   useEffect(() => {
-    // Check for authentication token
     const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
     if (token) {
       setIsAuthenticated(true);
+      setIsDoctor(userType === 'doctor');
     }
   }, []);
 
@@ -176,10 +180,11 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (value: boolean, isNewUser: boolean, needDocuments: boolean) => {
+  const handleLogin = (value: boolean, isNewUser: boolean, needDocuments: boolean, isDoctor: boolean) => {
     setIsAuthenticated(value);
     setNeedsProfileSetup(isNewUser);
     setNeedsDocumentSetup(needDocuments);
+    setIsDoctor(isDoctor);
   };
 
   const handleProfileSetup = (userData: { name: string; dateOfBirth: string; address: string }) => {
@@ -302,10 +307,19 @@ function App() {
             } shadow-lg overflow-hidden z-10`}
           >
             <div className="p-4 space-y-2">
-              <NavLink tab="profile" icon={UserIcon} label={t.profile} />
-              <NavLink tab="records" icon={FileText} label={t.records} />
-              <NavLink tab="appointments" icon={Calendar} label={t.appointments} />
-              <NavLink tab="access-logs" icon={History} label={t.accessLogs} />
+              {isDoctor ? (
+                <>
+                  <NavLink tab="patients" icon={Users} label="Patients" />
+                  <NavLink tab="appointments" icon={Calendar} label="Appointments" />
+                </>
+              ) : (
+                <>
+                  <NavLink tab="profile" icon={UserIcon} label={t.profile} />
+                  <NavLink tab="records" icon={FileText} label={t.records} />
+                  <NavLink tab="appointments" icon={Calendar} label={t.appointments} />
+                  <NavLink tab="access-logs" icon={History} label={t.accessLogs} />
+                </>
+              )}
             </div>
           </motion.aside>
         )}
@@ -361,6 +375,8 @@ function App() {
                         Loading...
                       </div>
                     </div>
+                  ) : isDoctor ? (
+                    <DoctorDashboard isDarkMode={isDarkMode} />
                   ) : activeTab === 'access-logs' ? (
                     <AccessLogs isDarkMode={isDarkMode} language={language} />
                   ) : activeTab === 'appointments' ? (
