@@ -25,30 +25,49 @@ import { Appointments } from './components/Appointments';
 // Mock data for when backend fails
 const mockUser: User = {
   id: 'mock-user-id',
-  name: 'John Doe',
-  email: 'john@example.com',
-  dateOfBirth: '1990-01-01',
-  bloodType: 'A+',
-  address: '123 Main St, City',
+  name: 'Anna Kowalska',
+  email: 'anna.kowalska@example.com',
+  dateOfBirth: '1992-05-15',
+  bloodType: 'B+',
+  address: 'ul. Warszawska 123/4, 00-001 Warszawa',
 };
 
 const mockRecords: MedicalRecord[] = [
   {
-    ID: 'mock-1',
+    ID: 'rec-2025-001',
     date: '2025-03-15',
     type: 'analysis',
-    FileName: 'Blood Test Results',
-    Description: 'Regular blood test analysis',
+    FileName: 'Complete Blood Count Results',
+    Description: 'Regular blood test analysis including CBC, metabolic panel, and lipid profile',
     status: 'completed',
-    result: 'All parameters within normal range',
+    result: 'All parameters within normal range. Cholesterol slightly elevated (5.8 mmol/L)',
+    isPrivate: true
+  },
+  {
+    ID: 'rec-2025-002',
+    date: '2025-03-10',
+    type: 'reference',
+    FileName: 'Chest X-Ray Report',
+    Description: 'Annual chest X-ray examination for preventive screening',
+    status: 'completed',
+    result: 'No significant findings. Lungs clear, heart size normal',
     isPrivate: false
   },
   {
-    ID: 'mock-2',
-    date: '2025-03-10',
+    ID: 'rec-2025-003',
+    date: '2025-03-20',
+    type: 'analysis',
+    FileName: 'Thyroid Function Test',
+    Description: 'TSH, T3, and T4 levels analysis',
+    status: 'pending',
+    isPrivate: false
+  },
+  {
+    ID: 'rec-2025-004',
+    date: '2025-03-22',
     type: 'reference',
-    FileName: 'X-Ray Report',
-    Description: 'Chest X-Ray examination',
+    FileName: 'Cardiology Consultation',
+    Description: 'Follow-up consultation with cardiologist',
     status: 'pending',
     isPrivate: true
   }
@@ -122,10 +141,10 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userType = localStorage.getItem('userType');
+    const userRole = localStorage.getItem('userRole');
     if (token) {
       setIsAuthenticated(true);
-      setIsDoctor(userType === 'doctor');
+      setIsDoctor(userRole === 'doctor');
     }
   }, []);
 
@@ -209,9 +228,11 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
     setIsAuthenticated(false);
     setActiveTab('profile');
     setUser(null);
+    setIsDoctor(false);
   };
 
   const handleLanguageChange = () => {
