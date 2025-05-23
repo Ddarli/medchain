@@ -40,7 +40,8 @@ const mockRecords: MedicalRecord[] = [
     FileName: 'Blood Test Results',
     Description: 'Regular blood test analysis',
     status: 'completed',
-    result: 'All parameters within normal range'
+    result: 'All parameters within normal range',
+    isPrivate: false
   },
   {
     ID: 'mock-2',
@@ -48,7 +49,8 @@ const mockRecords: MedicalRecord[] = [
     type: 'reference',
     FileName: 'X-Ray Report',
     Description: 'Chest X-Ray examination',
-    status: 'pending'
+    status: 'pending',
+    isPrivate: true
   }
 ];
 
