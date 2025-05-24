@@ -84,6 +84,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   language
 }) => {
   const [selectedRecord, setSelectedRecord] = useState<MedicalRecord | null>(null);
+  const [localRecords, setLocalRecords] = useState<MedicalRecord[]>(records);
   const t = translations[language];
 
   const formatDate = (dateString: string) => {
@@ -92,6 +93,33 @@ export const Dashboard: React.FC<DashboardProps> = ({
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const togglePrivacy = async (recordId: string) => {
+    try {
+      // In a real application, this would be an API call
+      setLocalRecords(prevRecords =>
+        prevRecords.map(record =>
+          record.ID === recordId
+            ? { ...record, isPrivate: !record.isPrivate }
+            : record
+        )
+      );
+
+      // Simulated API call
+      // await fetch(`/api/records/${recordId}/privacy`, {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${localStorage.getItem('token')}`
+      //   },
+      //   body: JSON.stringify({ isPrivate: !record.isPrivate })
+      // });
+    } catch (error) {
+      console.error('Error toggling privacy:', error);
+      // Revert changes on error
+      setLocalRecords(records);
+    }
   };
 
   const ProfileSection = () => (
@@ -155,7 +183,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         {t.records.title}
       </h2>
 
-      {records.length === 0 ? (
+      {localRecords.length === 0 ? (
         <p className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           {t.records.noRecords}
         </p>
@@ -172,7 +200,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </tr>
             </thead>
             <tbody>
-              {records.map((record) => (
+              {localRecords.map((record) => (
                 <motion.tr
                   key={record.ID}
                   initial={{ opacity: 0 }}
@@ -252,6 +280,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => togglePrivacy(record.ID)}
                         className={`p-2 rounded-lg ${
                           isDarkMode
                             ? 'hover:bg-gray-700'
