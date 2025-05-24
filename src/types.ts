@@ -34,7 +34,6 @@ export interface AccessLog {
     name: string;
     role: string;
   };
-  accessType: 'view' | 'download';
   timestamp: string;
 }
 
@@ -79,8 +78,6 @@ export interface Doctor {
   id: string;
   name: string;
   specialty: string;
-  rating: number;
-  image: string;
   availableSlots: string[];
 }
 

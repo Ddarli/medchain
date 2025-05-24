@@ -12,38 +12,24 @@ const mockAccessLogs: AccessLog[] = [
   {
     id: '1',
     recordId: '1',
-    recordTitle: 'Blood Test Results',
+    recordTitle: 'Рентген грудной клетки',
     accessedBy: {
       id: '101',
-      name: 'Dr. Sarah Johnson',
-      role: 'Primary Physician'
+      name: 'Доктор Анна Смирнова',
+      role: 'Терапевт'
     },
-    accessType: 'view',
-    timestamp: '2025-03-15T10:30:00Z'
+    timestamp: '2025-05-15T10:30:00Z'
   },
   {
     id: '2',
     recordId: '1',
-    recordTitle: 'Blood Test Results',
+    recordTitle: 'Рентген околоносовых пазух',
     accessedBy: {
       id: '102',
-      name: 'Dr. Michael Chen',
-      role: 'Lab Specialist'
+      name: 'Доктор Александр Ткаченко',
+      role: 'Лор'
     },
-    accessType: 'download',
-    timestamp: '2025-03-15T11:45:00Z'
-  },
-  {
-    id: '3',
-    recordId: '2',
-    recordTitle: 'X-Ray Examination',
-    accessedBy: {
-      id: '103',
-      name: 'Dr. Emily White',
-      role: 'Radiologist'
-    },
-    accessType: 'view',
-    timestamp: '2025-03-14T09:15:00Z'
+    timestamp: '2025-05-11T11:45:00Z'
   }
 ];
 
@@ -186,10 +172,10 @@ export const AccessLogs: React.FC<AccessLogsProps> = ({ isDarkMode }) => {
                   {log.recordTitle}
                 </h3>
                 <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Accessed by: {log.accessedBy.name}
+                  Просмотренно: {log.accessedBy.name}
                 </p>
                 <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Role: {log.accessedBy.role}
+                  Специальность: {log.accessedBy.role}
                 </p>
               </div>
               <div className="flex items-center space-x-2">

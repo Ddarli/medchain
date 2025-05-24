@@ -8,26 +8,23 @@ import { Toast } from './Toast';
 const mockDoctors: Doctor[] = [
   {
     id: '1',
-    name: 'Dr. Sarah Johnson',
-    specialty: 'Cardiologist',
-    rating: 4.8,
-    image: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    name: 'Анна Смирнова',
+    specialty: 'Терапевт',
+    image: './src/images/docImage.png',
     availableSlots: ['09:00', '10:00', '14:00', '15:00']
   },
   {
     id: '2',
-    name: 'Dr. Michael Chen',
-    specialty: 'Neurologist',
-    rating: 4.9,
-    image: 'https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    name: 'Александр Ткаченко',
+    specialty: 'Лор',
+    image: './src/images/docImage.png',
     availableSlots: ['11:00', '13:00', '16:00']
   },
   {
     id: '3',
-    name: 'Dr. Emily White',
-    specialty: 'Pediatrician',
-    rating: 4.7,
-    image: 'https://images.pexels.com/photos/5214995/pexels-photo-5214995.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    name: 'Елена Крылова',
+    specialty: 'Эндокринолог',
+    image: './src/images/docImage.png',
     availableSlots: ['09:30', '10:30', '14:30']
   }
 ];
@@ -69,9 +66,9 @@ const translations = {
     confirmationMessage: 'Ваш прием успешно запланирован',
     noAvailableSlots: 'Нет доступных слотов',
     status: {
-      scheduled: 'Запланирован',
-      completed: 'Завершен',
-      cancelled: 'Отменен'
+      scheduled: 'Запланирована',
+      completed: 'Завершена',
+      cancelled: 'Отменена'
     }
   }
 };
@@ -81,7 +78,26 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isDarkMode, language
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedTime, setSelectedTime] = useState('');
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([
+    {
+      id: 'mock1',
+      doctorId: '1',
+      doctorName: 'Анна Смирнова',
+      specialty: 'Терапевт',
+      date: '2025-05-15T10:30:00Z',
+      time: '13:25:00',
+      status: 'completed',
+    },
+    {
+      id: 'mock2',
+      doctorId: '2',
+      doctorName: 'Александр Ткаченко',
+      specialty: 'Лор',
+      date: '2023-05-11',
+      time: '14:30:00',
+      status: 'completed',
+    },
+  ]);
   const [showToast, setShowToast] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>(mockDoctors);
   const [loading, setLoading] = useState<boolean>(false);
@@ -168,12 +184,6 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isDarkMode, language
               <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 {doctor.specialty}
               </p>
-              <div className="flex items-center mt-2">
-                <Star className="w-5 h-5 text-yellow-400 fill-current"/>
-                <span className={`ml-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {doctor.rating}
-                </span>
-              </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -327,11 +337,11 @@ export const Appointments: React.FC<AppointmentsProps> = ({ isDarkMode, language
                     <div className="flex items-center mt-2">
                       <Calendar className="w-4 h-4 mr-2"/>
                       <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {appointment.date}
+                        {new Date(appointment.date).toLocaleDateString()}
                       </span>
                       <Clock className="w-4 h-4 ml-4 mr-2"/>
                       <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {appointment.time}
+                        {appointment.time.toLocaleString()}
                       </span>
                     </div>
                   </div>

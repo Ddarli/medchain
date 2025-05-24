@@ -100,7 +100,7 @@ const translations = {
   ru: {
     appName: 'МедПортал',
     profile: 'Профиль',
-    records: 'Записи',
+    records: 'Анализы',
     accessLogs: 'Журнал доступа',
     logout: 'Выход',
     personalInfo: 'Личная информация',

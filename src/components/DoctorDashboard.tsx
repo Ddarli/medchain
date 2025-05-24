@@ -160,7 +160,7 @@ export const DoctorDashboard: React.FC<{ isDarkMode: boolean }> = ({ isDarkMode 
                 </td>
                 <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   <div className="flex items-center">
-                    <FileText className="w-4 h-4 mr-2" />
+                    <FileText className="w-4 h-4 mr-2" />А
                     {patient.records}
                   </div>
                 </td>
