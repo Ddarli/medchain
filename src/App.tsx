@@ -22,14 +22,13 @@ import {
 import { DocumentSetup } from "./components/DocumentSetup";
 import { Appointments } from './components/Appointments';
 
-// Mock data for when backend fails
 const mockUser: User = {
   id: 'mock-user-id',
-  name: 'Anna Kowalska',
-  email: 'anna.kowalska@example.com',
+  name: 'Иван Петров',
+  email: 'ivan.petrov@example.com',
   dateOfBirth: '1992-05-15',
   bloodType: 'B+',
-  address: 'ul. Warszawska 123/4, 00-001 Warszawa',
+  address: 'ул. Ленина 123, кв. 45, Москва, 123456',
 };
 
 const mockRecords: MedicalRecord[] = [
@@ -37,28 +36,28 @@ const mockRecords: MedicalRecord[] = [
     ID: 'rec-2025-001',
     date: '2025-03-15',
     type: 'analysis',
-    FileName: 'Complete Blood Count Results',
-    Description: 'Regular blood test analysis including CBC, metabolic panel, and lipid profile',
+    FileName: 'Общий анализ крови',
+    Description: 'Плановый анализ крови, включая общий анализ и биохимию',
     status: 'completed',
-    result: 'All parameters within normal range. Cholesterol slightly elevated (5.8 mmol/L)',
+    result: 'Все показатели в пределах нормы. Холестерин слегка повышен (5.8 ммоль/л)',
     isPrivate: true
   },
   {
     ID: 'rec-2025-002',
     date: '2025-03-10',
     type: 'reference',
-    FileName: 'Chest X-Ray Report',
-    Description: 'Annual chest X-ray examination for preventive screening',
+    FileName: 'Рентген грудной клетки',
+    Description: 'Ежегодное профилактическое обследование',
     status: 'completed',
-    result: 'No significant findings. Lungs clear, heart size normal',
+    result: 'Патологий не выявлено. Легкие и сердце в норме',
     isPrivate: false
   },
   {
     ID: 'rec-2025-003',
     date: '2025-03-20',
     type: 'analysis',
-    FileName: 'Thyroid Function Test',
-    Description: 'TSH, T3, and T4 levels analysis',
+    FileName: 'Анализ функции щитовидной железы',
+    Description: 'Анализ уровней ТТГ, Т3, и Т4',
     status: 'pending',
     isPrivate: false
   },
@@ -66,8 +65,8 @@ const mockRecords: MedicalRecord[] = [
     ID: 'rec-2025-004',
     date: '2025-03-22',
     type: 'reference',
-    FileName: 'Cardiology Consultation',
-    Description: 'Follow-up consultation with cardiologist',
+    FileName: 'Консультация кардиолога',
+    Description: 'Плановая консультация',
     status: 'pending',
     isPrivate: true
   }
