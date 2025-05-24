@@ -12,7 +12,7 @@ const mockAccessLogs: AccessLog[] = [
   {
     id: '1',
     recordId: '1',
-    recordTitle: 'Рентген грудной клетки',
+    recordTitle: 'Общий анализ крови',
     accessedBy: {
       id: '101',
       name: 'Доктор Анна Смирнова',
@@ -34,7 +34,7 @@ const mockAccessLogs: AccessLog[] = [
 ];
 
 const filterOptions = [
-  { value: 'all', label: 'All Access Types', icon: <Filter className="w-4 h-4" /> },
+  { value: 'all', label: 'Все', icon: <Filter className="w-4 h-4" /> },
   { value: 'view', label: 'Views Only', icon: <Eye className="w-4 h-4" /> },
   { value: 'download', label: 'Downloads Only', icon: <Download className="w-4 h-4" /> }
 ];
@@ -73,7 +73,7 @@ export const AccessLogs: React.FC<AccessLogsProps> = ({ isDarkMode }) => {
       className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-6`}
     >
       <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-        Access Logs
+        Журнал доступа к медицинским записям
       </h2>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -82,7 +82,7 @@ export const AccessLogs: React.FC<AccessLogsProps> = ({ isDarkMode }) => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by record, doctor, or role..."
+              placeholder="Поиск по врачу или анализу..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={`w-full pl-10 pr-4 py-2 rounded-lg border ${

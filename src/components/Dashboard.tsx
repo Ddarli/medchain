@@ -193,9 +193,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <thead>
               <tr className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
                 <th className="text-left py-3 px-4">{t.records.date}</th>
-                <th className="text-left py-3 px-4">{t.records.type}</th>
                 <th className="text-left py-3 px-4">{t.records.description}</th>
-                <th className="text-left py-3 px-4">{t.records.status}</th>
                 <th className="text-left py-3 px-4">{t.records.actions}</th>
               </tr>
             </thead>
@@ -210,20 +208,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>
                     {formatDate(record.date)}
                   </td>
-                  <td className={`py-4 px-4`}>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
-                      ${record.type === 'analysis'
-                        ? isDarkMode
-                          ? 'bg-blue-900/30 text-blue-300'
-                          : 'bg-blue-100 text-blue-800'
-                        : isDarkMode
-                          ? 'bg-purple-900/30 text-purple-300'
-                          : 'bg-purple-100 text-purple-800'
-                      }`}
-                    >
-                      {t.records.types[record.type]}
-                    </span>
-                  </td>
                   <td className={`py-4 px-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>
                     <div>
                       <p className="font-medium">{record.FileName}</p>
@@ -232,23 +216,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </p>
                     </div>
                   </td>
-                  <td className={`py-4 px-4`}>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
-                      ${record.status === 'completed'
-                        ? isDarkMode
-                          ? 'bg-green-900/30 text-green-300'
-                          : 'bg-green-100 text-green-800'
-                        : isDarkMode
-                          ? 'bg-yellow-900/30 text-yellow-300'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
-                      {t.records.statuses[record.status]}
-                    </span>
-                  </td>
                   <td className="py-4 px-4">
                     <div className="flex items-center space-x-2">
-                      {record.status === 'completed' && (
                         <>
                           <motion.button
                             whileHover={{ scale: 1.05 }}
@@ -276,7 +245,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             <Eye className="w-5 h-5 text-green-500" />
                           </motion.button>
                         </>
-                      )}
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

@@ -34,40 +34,32 @@ const mockUser: User = {
 const mockRecords: MedicalRecord[] = [
   {
     ID: 'rec-2025-001',
-    date: '2025-03-15',
-    type: 'analysis',
+    date: '2025-05-10',
     FileName: 'Общий анализ крови',
     Description: 'Плановый анализ крови, включая общий анализ и биохимию',
-    status: 'completed',
     result: 'Все показатели в пределах нормы. Холестерин слегка повышен (5.8 ммоль/л)',
     isPrivate: true
   },
   {
     ID: 'rec-2025-002',
-    date: '2025-03-10',
-    type: 'reference',
-    FileName: 'Рентген грудной клетки',
+    date: '2025-05-02',
+    FileName: 'Рентген околоносовых пазух',
     Description: 'Ежегодное профилактическое обследование',
-    status: 'completed',
-    result: 'Патологий не выявлено. Легкие и сердце в норме',
+    result: 'Патологий не выявлено',
     isPrivate: false
   },
   {
     ID: 'rec-2025-003',
-    date: '2025-03-20',
-    type: 'analysis',
+    date: '2025-04-25',
     FileName: 'Анализ функции щитовидной железы',
     Description: 'Анализ уровней ТТГ, Т3, и Т4',
-    status: 'pending',
     isPrivate: false
   },
   {
     ID: 'rec-2025-004',
-    date: '2025-03-22',
-    type: 'reference',
+    date: '2025-04-16',
     FileName: 'Консультация кардиолога',
     Description: 'Плановая консультация',
-    status: 'pending',
     isPrivate: true
   }
 ];
@@ -77,7 +69,7 @@ const translations = {
     appName: 'MedPortal',
     profile: 'Profile',
     records: 'Records',
-    accessLogs: 'Access Logs',
+    accessLogs: 'Журнал доступа',
     logout: 'Logout',
     personalInfo: 'Personal Information',
     documents: 'Documents',
