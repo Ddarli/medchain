@@ -179,11 +179,17 @@ export const DocumentSetup: React.FC<DocumentSetupProps> = ({ onComplete, isDark
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl mx-auto"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
     >
-      <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-8`}>
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-xl p-6 max-w-2xl w-full`}
+      >
         <h2 className={`text-2xl font-bold text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           {t.title}
         </h2>
@@ -334,7 +340,7 @@ export const DocumentSetup: React.FC<DocumentSetupProps> = ({ onComplete, isDark
             </motion.button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
