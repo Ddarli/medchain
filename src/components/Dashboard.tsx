@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, FileText } from 'lucide-react';
+import { User, FileText, Download } from 'lucide-react';
 import { User as UserType, MedicalRecord } from '../types';
+import { DownloadAnimation } from './DownloadAnimation';
 
 interface DashboardProps {
   user: UserType | null;
@@ -22,6 +23,7 @@ const translations = {
     address: 'Address',
     noRecords: 'No medical records found',
     viewDetails: 'View Details',
+    downloadRecord: 'Download Record',
     status: {
       completed: 'Completed',
       pending: 'Pending'
@@ -37,6 +39,7 @@ const translations = {
     address: 'Адрес',
     noRecords: 'Медицинские записи не найдены',
     viewDetails: 'Подробнее',
+    downloadRecord: 'Скачать запись',
     status: {
       completed: 'Завершено',
       pending: 'В обработке'
@@ -52,10 +55,24 @@ export const Dashboard: React.FC<DashboardProps> = ({
   language
 }) => {
   const [selectedRecord, setSelectedRecord] = useState<MedicalRecord | null>(null);
+  const [showDownloadAnimation, setShowDownloadAnimation] = useState(false);
   const t = translations[language];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(language === 'ru' ? 'ru-RU' : 'en-US');
+  };
+
+  const handleDownload = async (record: MedicalRecord) => {
+    setShowDownloadAnimation(true);
+    try {
+      // Simulate download delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Here you would typically handle the actual file download
+    } catch (error) {
+      console.error('Download failed:', error);
+    } finally {
+      setShowDownloadAnimation(false);
+    }
   };
 
   return (
@@ -146,18 +163,33 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         </span>
                       </div>
                     </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setSelectedRecord(record)}
-                      className={`px-4 py-2 rounded-lg ${
-                        isDarkMode
-                          ? 'bg-blue-600 hover:bg-blue-700'
-                          : 'bg-blue-500 hover:bg-blue-600'
-                      } text-white`}
-                    >
-                      {t.viewDetails}
-                    </motion.button>
+                    <div className="flex space-x-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleDownload(record)}
+                        className={`px-4 py-2 rounded-lg ${
+                          isDarkMode
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-green-500 hover:bg-green-600'
+                        } text-white flex items-center`}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        {t.downloadRecord}
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedRecord(record)}
+                        className={`px-4 py-2 rounded-lg ${
+                          isDarkMode
+                            ? 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-blue-500 hover:bg-blue-600'
+                        } text-white`}
+                      >
+                        {t.viewDetails}
+                      </motion.button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -214,9 +246,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {formatDate(selectedRecord.date)}
                 </p>
               </div>
+              <div className="flex justify-end mt-6">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleDownload(selectedRecord)}
+                  className={`px-4 py-2 rounded-lg ${
+                    isDarkMode
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-green-500 hover:bg-green-600'
+                  } text-white flex items-center`}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  {t.downloadRecord}
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* Download Animation */}
+      {showDownloadAnimation && (
+        <DownloadAnimation onComplete={() => setShowDownloadAnimation(false)} />
       )}
     </div>
   );
