@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { LogIn, Loader2, AlertCircle, Eye, EyeOff, UserPlus } from 'lucide-react';
 
 interface AuthProps {
   onLogin: (value: boolean, isNewUser?: boolean, needDocuments?: boolean, isDoctor?: boolean) => void;
@@ -11,28 +11,24 @@ interface AuthProps {
 const translations = {
   en: {
     login: 'Login',
+    register: 'Register',
     email: 'Email',
     password: 'Password',
     invalidCredentials: 'Invalid credentials',
     invalidEmail: 'Please enter a valid email address',
-    testCredentials: 'Test Credentials',
-    useTestCredentials: 'Use test credentials'
+    switchToLogin: 'Already have an account? Login',
+    switchToRegister: 'Need an account? Register'
   },
   ru: {
     login: 'Войти',
+    register: 'Регистрация',
     email: 'Эл. почта',
     password: 'Пароль',
     invalidCredentials: 'Неверные учетные данные',
     invalidEmail: 'Пожалуйста, введите корректный адрес эл. почты',
-    testCredentials: 'Тестовые данные',
-    useTestCredentials: 'Использовать тестовые данные'
+    switchToLogin: 'Уже есть аккаунт? Войти',
+    switchToRegister: 'Нужен аккаунт? Зарегистрироваться'
   }
-};
-
-// Test credentials
-const testCredentials = {
-  email: 'test@example.com',
-  password: 'Test123!@#'
 };
 
 export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => {
@@ -41,17 +37,13 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const t = translations[language];
 
   const isEmailValid = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  };
-
-  const useTestCredentials = () => {
-    setEmail(testCredentials.email);
-    setPassword(testCredentials.password);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,15 +58,8 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
     setLoading(true);
 
     try {
-      // Simulate API call with test credentials
-      if (email === testCredentials.email && password === testCredentials.password) {
-        localStorage.setItem("token", "mock-token");
-        localStorage.setItem("userRole", email.includes('doctor') ? 'doctor' : 'patient');
-        onLogin(true, false, false, email.includes('doctor'));
-        return;
-      }
-
-      const response = await fetch('http://localhost:8080/auth/authenticate', {
+      const endpoint = isRegistering ? 'register' : 'authenticate';
+      const response = await fetch(`http://localhost:8080/auth/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +80,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
       localStorage.setItem("token", data.Token);
       localStorage.setItem("userRole", data.role);
 
-      onLogin(true, !data.Verified, data.NeedDocsSetup, data.role === 'doctor');
+      onLogin(true, isRegistering, data.NeedDocsSetup, data.role === 'doctor');
     } catch (err: any) {
       setError(err.message || t.invalidCredentials);
     } finally {
@@ -111,7 +96,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
     >
       <div className="glass-panel rounded-2xl p-8">
         <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
-          {t.login}
+          {isRegistering ? t.register : t.login}
         </h2>
         
         {error && (
@@ -167,21 +152,23 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                <LogIn className="mr-2" size={20} />
-                {t.login}
+                {isRegistering ? (
+                  <UserPlus className="mr-2" size={20} />
+                ) : (
+                  <LogIn className="mr-2" size={20} />
+                )}
+                {isRegistering ? t.register : t.login}
               </>
             )}
           </motion.button>
 
-          <motion.button
+          <button
             type="button"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={useTestCredentials}
-            className="glass-button-secondary w-full flex items-center justify-center py-3 mt-4"
+            onClick={() => setIsRegistering(!isRegistering)}
+            className="w-full text-center text-sm text-dark-500 dark:text-dark-400 hover:text-dark-700 dark:hover:text-dark-200 transition-colors"
           >
-            {t.useTestCredentials}
-          </motion.button>
+            {isRegistering ? t.switchToLogin : t.switchToRegister}
+          </button>
         </form>
       </div>
     </motion.div>
