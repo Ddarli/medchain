@@ -14,29 +14,45 @@ const translations = {
     register: 'Register',
     email: 'Email',
     password: 'Password',
+    confirmPassword: 'Confirm Password',
     invalidCredentials: 'Invalid credentials',
     invalidEmail: 'Please enter a valid email address',
+    passwordMismatch: 'Passwords do not match',
     switchToLogin: 'Already have an account? Login',
-    switchToRegister: 'Need an account? Register'
+    switchToRegister: 'Need an account? Register',
+    testCredentials: 'Use test account',
+    or: 'or'
   },
   ru: {
     login: 'Войти',
     register: 'Регистрация',
     email: 'Эл. почта',
     password: 'Пароль',
+    confirmPassword: 'Подтвердите пароль',
     invalidCredentials: 'Неверные учетные данные',
     invalidEmail: 'Пожалуйста, введите корректный адрес эл. почты',
+    passwordMismatch: 'Пароли не совпадают',
     switchToLogin: 'Уже есть аккаунт? Войти',
-    switchToRegister: 'Нужен аккаунт? Зарегистрироваться'
+    switchToRegister: 'Нужен аккаунт? Зарегистрироваться',
+    testCredentials: 'Использовать тестовый аккаунт',
+    or: 'или'
   }
+};
+
+// Test credentials
+const testCredentials = {
+  email: 'test@example.com',
+  password: 'Test123!@#'
 };
 
 export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
   const t = translations[language];
@@ -44,6 +60,12 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
   const isEmailValid = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const useTestCredentials = () => {
+    setEmail(testCredentials.email);
+    setPassword(testCredentials.password);
+    setIsRegistering(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,9 +77,22 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
       return;
     }
 
+    if (isRegistering && password !== confirmPassword) {
+      setError(t.passwordMismatch);
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Test credentials check
+      if (!isRegistering && email === testCredentials.email && password === testCredentials.password) {
+        localStorage.setItem("token", "mock-token");
+        localStorage.setItem("userRole", email.includes('doctor') ? 'doctor' : 'patient');
+        onLogin(true, false, false, email.includes('doctor'));
+        return;
+      }
+
       const endpoint = isRegistering ? 'register' : 'authenticate';
       const response = await fetch(`http://localhost:8080/auth/${endpoint}`, {
         method: 'POST',
@@ -142,6 +177,30 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
             </div>
           </div>
 
+          {isRegistering && (
+            <div>
+              <label className="block text-sm font-medium text-dark-700 dark:text-dark-200 mb-2">
+                {t.confirmPassword}
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="glass-input w-full pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-dark-400 hover:text-dark-600 dark:text-dark-400 dark:hover:text-dark-200"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+          )}
+
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -162,10 +221,34 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
             )}
           </motion.button>
 
+          {!isRegistering && (
+            <>
+              <div className="relative flex items-center justify-center my-4">
+                <div className="border-t flex-grow dark:border-dark-700"></div>
+                <span className="px-4 text-sm text-dark-500 dark:text-dark-400">{t.or}</span>
+                <div className="border-t flex-grow dark:border-dark-700"></div>
+              </div>
+
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={useTestCredentials}
+                className="glass-button-secondary w-full flex items-center justify-center py-3"
+              >
+                {t.testCredentials}
+              </motion.button>
+            </>
+          )}
+
           <button
             type="button"
-            onClick={() => setIsRegistering(!isRegistering)}
-            className="w-full text-center text-sm text-dark-500 dark:text-dark-400 hover:text-dark-700 dark:hover:text-dark-200 transition-colors"
+            onClick={() => {
+              setIsRegistering(!isRegistering);
+              setError('');
+              setConfirmPassword('');
+            }}
+            className="w-full text-center text-sm text-dark-500 dark:text-dark-400 hover:text-dark-700 dark:hover:text-dark-200 transition-colors mt-4"
           >
             {isRegistering ? t.switchToLogin : t.switchToRegister}
           </button>
