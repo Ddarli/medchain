@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, FileText, Download } from 'lucide-react';
+import { User, FileText, Download, Eye, Calendar, Clock, FileCheck2, AlertCircle } from 'lucide-react';
 import { User as UserType, MedicalRecord } from '../types';
 import { DownloadAnimation } from './DownloadAnimation';
 
@@ -23,7 +23,7 @@ const translations = {
     address: 'Address',
     noRecords: 'No medical records found',
     viewDetails: 'View Details',
-    downloadRecord: 'Download Record',
+    downloadRecord: 'Download',
     status: {
       completed: 'Completed',
       pending: 'Pending'
@@ -38,8 +38,8 @@ const translations = {
     bloodType: 'Группа крови',
     address: 'Адрес',
     noRecords: 'Медицинские записи не найдены',
-    viewDetails: 'Подробнее',
-    downloadRecord: 'Скачать запись',
+    viewDetails: 'Просмотр',
+    downloadRecord: 'Скачать',
     status: {
       completed: 'Завершено',
       pending: 'В обработке'
@@ -145,49 +145,65 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className={`${
-                    isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-                  } rounded-lg p-4`}
+                    isDarkMode ? 'bg-gray-700 hover:bg-gray-650' : 'bg-gray-50 hover:bg-gray-100'
+                  } rounded-lg p-6 transition-colors duration-200`}
                 >
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {record.FileName}
-                      </h3>
-                      <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <div className="flex-grow">
+                      <div className="flex items-center">
+                        <FileCheck2 className={`w-5 h-5 mr-3 ${isDarkMode ? 'text-blue-400' : 'text-blue-500'}`} />
+                        <h3 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {record.FileName}
+                        </h3>
+                      </div>
+                      <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {record.Description}
                       </p>
-                      <div className="flex items-center mt-2">
-                        <FileText className="w-4 h-4 mr-2"/>
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {formatDate(record.date)}
-                        </span>
+                      <div className="flex items-center mt-3 space-x-4">
+                        <div className="flex items-center">
+                          <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {formatDate(record.date)}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                          <span className={`text-sm ${
+                            record.status === 'completed' 
+                              ? isDarkMode ? 'text-green-400' : 'text-green-600'
+                              : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
+                          }`}>
+                            {t.status[record.status]}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-3">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleDownload(record)}
-                        className={`px-4 py-2 rounded-lg ${
+                        className={`p-2 rounded-full ${
                           isDarkMode
-                            ? 'bg-green-600 hover:bg-green-700'
-                            : 'bg-green-500 hover:bg-green-600'
-                        } text-white flex items-center`}
+                            ? 'bg-green-600/20 hover:bg-green-600/30 text-green-400'
+                            : 'bg-green-100 hover:bg-green-200 text-green-600'
+                        } transition-colors duration-200`}
+                        title={t.downloadRecord}
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        {t.downloadRecord}
+                        <Download className="w-5 h-5" />
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setSelectedRecord(record)}
-                        className={`px-4 py-2 rounded-lg ${
+                        className={`p-2 rounded-full ${
                           isDarkMode
-                            ? 'bg-blue-600 hover:bg-blue-700'
-                            : 'bg-blue-500 hover:bg-blue-600'
-                        } text-white`}
+                            ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-400'
+                            : 'bg-blue-100 hover:bg-blue-200 text-blue-600'
+                        } transition-colors duration-200`}
+                        title={t.viewDetails}
                       >
-                        {t.viewDetails}
+                        <Eye className="w-5 h-5" />
                       </motion.button>
                     </div>
                   </div>
@@ -216,9 +232,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
               isDarkMode ? 'bg-gray-800' : 'bg-white'
             } rounded-lg shadow-xl p-6 max-w-lg w-full`}
           >
-            <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              {selectedRecord.FileName}
-            </h3>
+            <div className="flex items-center mb-4">
+              <FileCheck2 className={`w-6 h-6 mr-3 ${isDarkMode ? 'text-blue-400' : 'text-blue-500'}`} />
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {selectedRecord.FileName}
+              </h3>
+            </div>
             <div className="space-y-4">
               <div>
                 <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -238,13 +257,37 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </p>
                 </div>
               )}
-              <div>
-                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Date
-                </label>
-                <p className={`mt-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {formatDate(selectedRecord.date)}
-                </p>
+              <div className="flex items-center space-x-4">
+                <div>
+                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Date
+                  </label>
+                  <div className="flex items-center mt-1">
+                    <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                    <p className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {formatDate(selectedRecord.date)}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Status
+                  </label>
+                  <div className="flex items-center mt-1">
+                    {selectedRecord.status === 'completed' ? (
+                      <FileCheck2 className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-green-400' : 'text-green-500'}`} />
+                    ) : (
+                      <AlertCircle className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                    )}
+                    <p className={`${
+                      selectedRecord.status === 'completed'
+                        ? isDarkMode ? 'text-green-400' : 'text-green-600'
+                        : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
+                    }`}>
+                      {t.status[selectedRecord.status]}
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="flex justify-end mt-6">
                 <motion.button
@@ -253,11 +296,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   onClick={() => handleDownload(selectedRecord)}
                   className={`px-4 py-2 rounded-lg ${
                     isDarkMode
-                      ? 'bg-green-600 hover:bg-green-700'
-                      : 'bg-green-500 hover:bg-green-600'
-                  } text-white flex items-center`}
+                      ? 'bg-green-600/20 hover:bg-green-600/30 text-green-400'
+                      : 'bg-green-100 hover:bg-green-200 text-green-600'
+                  } transition-colors duration-200 flex items-center`}
                 >
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="w-5 h-5 mr-2" />
                   {t.downloadRecord}
                 </motion.button>
               </div>
