@@ -97,7 +97,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const togglePrivacy = async (recordId: string) => {
     try {
-      // In a real application, this would be an API call
       setLocalRecords(prevRecords =>
         prevRecords.map(record =>
           record.ID === recordId
@@ -105,19 +104,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
             : record
         )
       );
-
-      // Simulated API call
-      // await fetch(`/api/records/${recordId}/privacy`, {
-      //   method: 'PATCH',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('token')}`
-      //   },
-      //   body: JSON.stringify({ isPrivate: !record.isPrivate })
-      // });
     } catch (error) {
       console.error('Error toggling privacy:', error);
-      // Revert changes on error
       setLocalRecords(records);
     }
   };
@@ -151,7 +139,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             {t.profile.dateOfBirth}
           </label>
-          <p className={`mt-1 text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <p className={`mt-1 text-lg ${isDarkMode ? '
+text-white' : 'text-gray-900'}`}>
             {formatDate(user?.dateOfBirth || '')}
           </p>
         </div>

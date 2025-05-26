@@ -88,7 +88,6 @@ export const DocumentSetup: React.FC<DocumentSetupProps> = ({ onComplete, isDark
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    // Validate passport fields if any passport field is filled
     if (passportSeries || passportNumber || passportIssuedBy || passportIssueDate) {
       if (!passportSeries.match(/^\d{4}$/)) {
         newErrors.passportSeries = t.invalidPassportSeries;
@@ -104,12 +103,10 @@ export const DocumentSetup: React.FC<DocumentSetupProps> = ({ onComplete, isDark
       }
     }
 
-    // Validate SNILS if filled
     if (snils && !snils.match(/^\d{3}-\d{3}-\d{3}\s\d{2}$/)) {
       newErrors.snils = t.invalidSnils;
     }
 
-    // Ensure at least one document is provided
     if (!snils && !passportSeries) {
       newErrors.general = t.required;
     }
@@ -158,8 +155,6 @@ export const DocumentSetup: React.FC<DocumentSetupProps> = ({ onComplete, isDark
           }),
           credentials: "include"
         });
-        console.log("response", response);
-
 
         if (!response.ok) {
           throw new Error('Failed to submit document data');

@@ -19,9 +19,7 @@ const translations = {
     invalidEmail: 'Please enter a valid email address',
     passwordMismatch: 'Passwords do not match',
     switchToLogin: 'Already have an account? Login',
-    switchToRegister: 'Need an account? Register',
-    testCredentials: 'Use test account',
-    or: 'or'
+    switchToRegister: 'Need an account? Register'
   },
   ru: {
     login: 'Войти',
@@ -33,9 +31,7 @@ const translations = {
     invalidEmail: 'Пожалуйста, введите корректный адрес эл. почты',
     passwordMismatch: 'Пароли не совпадают',
     switchToLogin: 'Уже есть аккаунт? Войти',
-    switchToRegister: 'Нужен аккаунт? Зарегистрироваться',
-    testCredentials: 'Использовать тестовый аккаунт',
-    or: 'или'
+    switchToRegister: 'Нужен аккаунт? Зарегистрироваться'
   }
 };
 
@@ -60,12 +56,6 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
   const isEmailValid = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  };
-
-  const useTestCredentials = () => {
-    setEmail(testCredentials.email);
-    setPassword(testCredentials.password);
-    setIsRegistering(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -220,26 +210,6 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, isDarkMode, language }) => 
               </>
             )}
           </motion.button>
-
-          {!isRegistering && (
-            <>
-              <div className="relative flex items-center justify-center my-4">
-                <div className="border-t flex-grow dark:border-dark-700"></div>
-                <span className="px-4 text-sm text-dark-500 dark:text-dark-400">{t.or}</span>
-                <div className="border-t flex-grow dark:border-dark-700"></div>
-              </div>
-
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={useTestCredentials}
-                className="glass-button-secondary w-full flex items-center justify-center py-3"
-              >
-                {t.testCredentials}
-              </motion.button>
-            </>
-          )}
 
           <button
             type="button"
