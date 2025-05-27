@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, FileText, Download, Eye, Calendar, Clock, FileCheck2, AlertCircle } from 'lucide-react';
+import { User, FileText, Download, Eye, Calendar, Clock, FileCheck2, AlertCircle, Lock, Unlock } from 'lucide-react';
 import { User as UserType, MedicalRecord } from '../types';
 import { DownloadAnimation } from './DownloadAnimation';
 
@@ -24,6 +24,8 @@ const translations = {
     noRecords: 'No medical records found',
     viewDetails: 'View Details',
     downloadRecord: 'Download',
+    makePrivate: 'Make Private',
+    makePublic: 'Make Public',
     status: {
       completed: 'Completed',
       pending: 'Pending'
@@ -40,6 +42,8 @@ const translations = {
     noRecords: 'Медицинские записи не найдены',
     viewDetails: 'Просмотр',
     downloadRecord: 'Скачать',
+    makePrivate: 'Сделать приватным',
+    makePublic: 'Сделать публичным',
     status: {
       completed: 'Завершено',
       pending: 'В обработке'
@@ -49,13 +53,14 @@ const translations = {
 
 export const Dashboard: React.FC<DashboardProps> = ({
   user,
-  records,
+  records: initialRecords,
   activeTab,
   isDarkMode,
   language
 }) => {
   const [selectedRecord, setSelectedRecord] = useState<MedicalRecord | null>(null);
   const [showDownloadAnimation, setShowDownloadAnimation] = useState(false);
+  const [records, setRecords] = useState<MedicalRecord[]>(initialRecords);
   const t = translations[language];
 
   const formatDate = (dateString: string) => {
@@ -73,6 +78,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
     } finally {
       setShowDownloadAnimation(false);
     }
+  };
+
+  const togglePrivacy = (recordId: string) => {
+    setRecords(prevRecords => 
+      prevRecords.map(record => 
+        record.ID === recordId 
+          ? { ...record, isPrivate: !record.isPrivate }
+          : record
+      )
+    );
   };
 
   return (
@@ -173,12 +188,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
                               ? isDarkMode ? 'text-green-400' : 'text-green-600'
                               : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
                           }`}>
-                            {t.status[record.status]}
+                            {t.status[record.status || 'pending']}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex space-x-3">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => togglePrivacy(record.ID)}
+                        className={`p-2 rounded-full ${
+                          record.isPrivate
+                            ? isDarkMode
+                              ? 'bg-red-600/20 hover:bg-red-600/30 text-red-400'
+                              : 'bg-red-100 hover:bg-red-200 text-red-600'
+                            : isDarkMode
+                              ? 'bg-green-600/20 hover:bg-green-600/30 text-green-400'
+                              : 'bg-green-100 hover:bg-green-200 text-green-600'
+                        } transition-colors duration-200`}
+                        title={record.isPrivate ? t.makePublic : t.makePrivate}
+                      >
+                        {record.isPrivate ? <Lock className="w-5 h-5" /> : <Unlock className="w-5 h-5" />}
+                      </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -284,12 +316,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         ? isDarkMode ? 'text-green-400' : 'text-green-600'
                         : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
                     }`}>
-                      {t.status[selectedRecord.status]}
+                      {t.status[selectedRecord.status || 'pending']}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-end mt-6">
+              <div className="flex justify-end mt-6 space-x-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    togglePrivacy(selectedRecord.ID);
+                    setSelectedRecord(null);
+                  }}
+                  className={`px-4 py-2 rounded-lg ${
+                    selectedRecord.isPrivate
+                      ? isDarkMode
+                        ? 'bg-red-600/20 hover:bg-red-600/30 text-red-400'
+                        : 'bg-red-100 hover:bg-red-200 text-red-600'
+                      : isDarkMode
+                        ? 'bg-green-600/20 hover:bg-green-600/30 text-green-400'
+                        : 'bg-green-100 hover:bg-green-200 text-green-600'
+                  } transition-colors duration-200 flex items-center`}
+                >
+                  {selectedRecord.isPrivate ? <Lock className="w-5 h-5 mr-2" /> : <Unlock className="w-5 h-5 mr-2" />}
+                  {selectedRecord.isPrivate ? t.makePublic : t.makePrivate}
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

@@ -17,12 +17,13 @@ export interface User {
 export interface MedicalRecord {
   ID: string;
   date: string;
-  type: 'analysis' | 'reference';
+  type?: 'analysis' | 'reference';
   FileName: string;
   Description: string;
-  status: 'pending' | 'completed';
+  status?: 'pending' | 'completed';
   result?: string;
   isPrivate: boolean;
+  accessType?: 'view' | 'download';
 }
 
 export interface AccessLog {
@@ -35,6 +36,7 @@ export interface AccessLog {
     role: string;
   };
   timestamp: string;
+  accessType?: 'view' | 'download';
 }
 
 export interface FormField {
@@ -79,6 +81,7 @@ export interface Doctor {
   name: string;
   specialty: string;
   availableSlots: string[];
+  image?: string;
 }
 
 export interface Appointment {
