@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, FileText, Download, Eye, Calendar, Clock, FileCheck2, AlertCircle, Lock, Unlock } from 'lucide-react';
+import { User, FileText, Download, Eye, Calendar, Clock, FileCheck2, Lock, Unlock } from 'lucide-react';
 import { User as UserType, MedicalRecord } from '../types';
 import { DownloadAnimation } from './DownloadAnimation';
 
@@ -25,11 +25,7 @@ const translations = {
     viewDetails: 'View Details',
     downloadRecord: 'Download',
     makePrivate: 'Make Private',
-    makePublic: 'Make Public',
-    status: {
-      completed: 'Completed',
-      pending: 'Pending'
-    }
+    makePublic: 'Make Public'
   },
   ru: {
     personalInfo: 'Личная информация',
@@ -43,11 +39,7 @@ const translations = {
     viewDetails: 'Просмотр',
     downloadRecord: 'Скачать',
     makePrivate: 'Сделать приватным',
-    makePublic: 'Сделать публичным',
-    status: {
-      completed: 'Завершено',
-      pending: 'В обработке'
-    }
+    makePublic: 'Сделать публичным'
   }
 };
 
@@ -70,9 +62,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const handleDownload = async (record: MedicalRecord) => {
     setShowDownloadAnimation(true);
     try {
-      // Simulate download delay
       await new Promise(resolve => setTimeout(resolve, 2000));
-      // Here you would typically handle the actual file download
     } catch (error) {
       console.error('Download failed:', error);
     } finally {
@@ -174,23 +164,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {record.Description}
                       </p>
-                      <div className="flex items-center mt-3 space-x-4">
-                        <div className="flex items-center">
-                          <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            {formatDate(record.date)}
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                          <span className={`text-sm ${
-                            record.status === 'completed' 
-                              ? isDarkMode ? 'text-green-400' : 'text-green-600'
-                              : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
-                          }`}>
-                            {t.status[record.status || 'pending']}
-                          </span>
-                        </div>
+                      <div className="flex items-center mt-3">
+                        <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {formatDate(record.date)}
+                        </span>
                       </div>
                     </div>
                     <div className="flex space-x-3">
@@ -289,36 +267,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </p>
                 </div>
               )}
-              <div className="flex items-center space-x-4">
-                <div>
-                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Date
-                  </label>
-                  <div className="flex items-center mt-1">
-                    <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                    <p className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {formatDate(selectedRecord.date)}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Status
-                  </label>
-                  <div className="flex items-center mt-1">
-                    {selectedRecord.status === 'completed' ? (
-                      <FileCheck2 className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-green-400' : 'text-green-500'}`} />
-                    ) : (
-                      <AlertCircle className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-500'}`} />
-                    )}
-                    <p className={`${
-                      selectedRecord.status === 'completed'
-                        ? isDarkMode ? 'text-green-400' : 'text-green-600'
-                        : isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
-                    }`}>
-                      {t.status[selectedRecord.status || 'pending']}
-                    </p>
-                  </div>
+              <div>
+                <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Date
+                </label>
+                <div className="flex items-center mt-1">
+                  <Calendar className={`w-4 h-4 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                  <p className={`${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {formatDate(selectedRecord.date)}
+                  </p>
                 </div>
               </div>
               <div className="flex justify-end mt-6 space-x-3">

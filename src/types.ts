@@ -20,7 +20,6 @@ export interface MedicalRecord {
   type?: 'analysis' | 'reference';
   FileName: string;
   Description: string;
-  status?: 'pending' | 'completed';
   result?: string;
   isPrivate: boolean;
   accessType?: 'view' | 'download';
@@ -70,10 +69,6 @@ export interface Translations {
   medicalRecords: string;
   makePrivate: string;
   makePublic: string;
-  status: {
-    completed: string;
-    pending: string;
-  };
 }
 
 export interface Doctor {
